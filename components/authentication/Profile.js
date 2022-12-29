@@ -11,7 +11,10 @@ export default function Profile() {
     const [error, setError] = useState('')
     const { currentUser, logout } = useAuth()
     const router = useRouter()
-    console.log(currentUser)
+
+    if (currentUser === null) {
+        router.push('/auth/login')
+    }
 
     async function handleLogout() {
         setError('')
@@ -36,8 +39,8 @@ export default function Profile() {
                         {error && <Alert variant="danger">{error}</Alert>}
                         <img
                             referrerPolicy="no-referrer"
-                            className="w-20 h-20 rounded-full mx-auto mb-2" src={currentUser?.photoURL} referrerpolicy='no-referrer' />
-             
+                            className="w-20 h-20 rounded-full mx-auto mb-2" src={currentUser?.photoURL} referrerPolicy='no-referrer' />
+
                         <div className="text-center">
                             <strong>Email:</strong> {currentUser.email}
                         </div>

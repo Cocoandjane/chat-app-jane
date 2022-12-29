@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState} from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { useChat } from '../../contexts/ChatContext'
 import Header from './Header'
@@ -12,16 +12,19 @@ import Pusher from 'pusher-js'
 import { onSnapshot, doc } from 'firebase/firestore'
 import { db } from '../../firebase'
 import axios from 'axios'
+import { useRouter } from 'next/router'
 
 
 
 export default function ChatRooms() {
-
+    const router = useRouter()
     const { data } = useChat()
     const { currentUser } = useAuth()
     const [user, setUser] = useState([])
     const [messages, setMessages] = useState([])
-
+    if (currentUser === null) {
+        router.push('/auth/login')
+    }
 
     useEffect(() => {
         if (data.chatId) {

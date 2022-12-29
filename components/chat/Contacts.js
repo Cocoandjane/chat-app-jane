@@ -53,12 +53,13 @@ export default function Contacts() {
     }
 
     const items = [
-        {
-            key: '1',
-            label: (
-                <Button type='ghost'>  View  {ContextMenuName.split(" ")[0]}'s profile</Button>
-            ),
-        },
+        // {
+        //     key: '1',
+        //     label: (
+        //         <Button type='ghost'>  View  {ContextMenuName.split(" ")[0]}'s profile</Button>
+        //     ),
+        //     disabled: true
+        // },
         {
             key: '2',
             label: (
@@ -72,7 +73,7 @@ export default function Contacts() {
         <>
             {Object.entries(contacts).sort((a, b) => b[1].date - a[1].date).filter(data => data[1].closed !== true).map((contact) => (
                 
-                <div>
+                <div  key={contact[0]}>
                     {/* // onContextMenu={(e) => { e.preventDefault(); handleDeleteRoom(contact) }}
                     // onClick={() => handleSelect(contact[1].userInfo)}
                     // key={contact[0]} > */}
