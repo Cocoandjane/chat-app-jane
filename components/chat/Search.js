@@ -40,18 +40,7 @@ export default function Search() {
         //     handleSearch()
         // }
     }
-    //chats
-    //5ZlDRQi6X9SLW7PVWmcsSIPUVGJ21hprOf1AtnMEfefTLxEUrhTNj6d2 me
-    //iygfEVpD8nhDhbMUh1tsjN3RTCa21hprOf1AtnMEfefTLxEUrhTNj6d2 me
-
-    //iygfEVpD8nhDhbMUh1tsjN3RTCa25ZlDRQi6X9SLW7PVWmcsSIPUVGJ2 not me
-
-
-    //userChats
-    //1hprOf1AtnMEfefTLxEUrhTNj6d2 me
-    //the following 2 chattings are in my userChat list
-    //5ZlDRQi6X9SLW7PVWmcsSIPUVGJ21hprOf1AtnMEfefTLxEUrhTNj6d2 me
-    //iygfEVpD8nhDhbMUh1tsjN3RTCa21hprOf1AtnMEfefTLxEUrhTNj6d2 me
+  
     async function handleSelect() {
         console.log(user)
         console.log("select")
