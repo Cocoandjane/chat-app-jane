@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { useRef, useEffect } from 'react'
 import { db } from '../../firebase'
 import { useAuth } from '../../contexts/AuthContext'
-
 import { collection, query, where, getDocs, getDoc, update, addDoc, setDoc, updateDoc, doc, serverTimestamp } from "firebase/firestore";
-import { async } from '@firebase/util';
+import Image from 'next/image'
+
 export default function Search() {
     const [userName, setUserName] = useState('')
     const [user, setUser] = useState(null)
