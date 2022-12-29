@@ -107,10 +107,6 @@ export function AuthProvider({ children }) {
              setDoc(doc(db, "userChats", auth.currentUser.uid),{})
         }
     }   
-  
-
-      
-
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
@@ -134,8 +130,6 @@ export function AuthProvider({ children }) {
         getUserByEmail,
     }
 
-
-    const router = useRouter()
     return (
         <AuthContext.Provider value={value}>
             {children}

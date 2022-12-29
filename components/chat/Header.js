@@ -13,11 +13,11 @@ export default function Header() {
 
             <div className="py-2 px-3 bg-grey-lighter flex flex-row justify-between items-center">
                 <div onClick={() => { router.push("/user") }}>
-                    <Image
+                   { currentUser?.photoURL && <Image
                         width={45} height={45}
                         referrerPolicy="no-referrer"
                         alt="my profile image"
-                        className="rounded-full" src={currentUser?.photoURL} eferrerpolicy='no-referrer' />
+                        className="rounded-full" src={currentUser?.photoURL} eferrerpolicy='no-referrer' />}
                 </div>
 
                 <div className="flex" >

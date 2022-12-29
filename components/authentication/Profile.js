@@ -12,9 +12,6 @@ export default function Profile() {
     const { currentUser, logout } = useAuth()
     const router = useRouter()
 
-    if (currentUser === null) {
-        router.push('/auth/login')
-    }
 
     async function handleLogout() {
         setError('')

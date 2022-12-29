@@ -13,8 +13,7 @@ export default function Home() {
       <ChatProvider>
       <ChatRooms/>
       </ChatProvider>
-    </AuthProvider>
-      
+    </AuthProvider>     
   )
 }
 

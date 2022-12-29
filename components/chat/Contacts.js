@@ -89,13 +89,13 @@ export default function Contacts() {
                         onClick={() => handleSelect(contact[1].userInfo)}
                         className=" bg-white px-3 flex items-center hover:bg-grey-lighter cursor-pointer ">
                             <div>
-                                <Image
+                               { contact[1].userInfo.photoURL &&  <Image
                                 width={48} height={48}
                                 alt={contact[1].userInfo.displayName}
                                 className="rounded-full "
 
                                     referrerPolicy="no-referrer"
-                                    src={contact[1].userInfo.photoURL} />
+                                    src={contact[1].userInfo.photoURL} />}
                             </div>
                             <div className="ml-4 flex-1 border-b border-grey-lighter pt-4">
                                 <div className="flex items-bottom justify-between">
@@ -108,7 +108,7 @@ export default function Contacts() {
                                         {contact[1].date === undefined ? "nothing" : new Date(contact[1].date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </p>
                                 </div>
-                                <p className="text-grey-dark text-sm -mt-3 ">
+                                <p className="text-grey-dark text-sm -mt-3 truncate w-[200px] ">
                                     {contact[1].lastMessage}
                                 </p>
                             </div>

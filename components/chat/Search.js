@@ -3,7 +3,7 @@ import { useRef, useEffect } from 'react'
 import { db } from '../../firebase'
 import { useAuth } from '../../contexts/AuthContext'
 
-import { collection, query, where, getDocs, getDoc,update, addDoc, setDoc,updateDoc, doc, serverTimestamp } from "firebase/firestore";
+import { collection, query, where, getDocs, getDoc, update, addDoc, setDoc, updateDoc, doc, serverTimestamp } from "firebase/firestore";
 import { async } from '@firebase/util';
 export default function Search() {
     const [userName, setUserName] = useState('')
@@ -34,7 +34,7 @@ export default function Search() {
     }
 
     function handleKeyDown(e) {
-   
+
         handleSearch()
         // if (e.key === 'Enter') {
         //     handleSearch()
@@ -50,7 +50,7 @@ export default function Search() {
     //userChats
     //1hprOf1AtnMEfefTLxEUrhTNj6d2 me
     //the following 2 chattings are in my userChat list
-     //5ZlDRQi6X9SLW7PVWmcsSIPUVGJ21hprOf1AtnMEfefTLxEUrhTNj6d2 me
+    //5ZlDRQi6X9SLW7PVWmcsSIPUVGJ21hprOf1AtnMEfefTLxEUrhTNj6d2 me
     //iygfEVpD8nhDhbMUh1tsjN3RTCa21hprOf1AtnMEfefTLxEUrhTNj6d2 me
     async function handleSelect() {
         console.log(user)
@@ -63,14 +63,14 @@ export default function Search() {
             if (!result.exists()) {
 
                 await setDoc(doc(db, "chats", combindId), { message: [] })
-            
+
                 await updateDoc(doc(db, "userChats", currentUser.uid), {
                     [combindId + ".userInfo"]: {
                         uid: user.uid,
                         displayName: user.displayName,
                         photoURL: user.photoURL
                     },
-                    [combindId +".date"]: Date.now()
+                    [combindId + ".date"]: Date.now()
                 })
                 await updateDoc(doc(db, "userChats", user.uid), {
                     [combindId + ".userInfo"]: {
@@ -78,12 +78,12 @@ export default function Search() {
                         displayName: currentUser.displayName,
                         photoURL: currentUser.photoURL
                     },
-                    [combindId +".date"]: Date.now()
+                    [combindId + ".date"]: Date.now()
                 })
             }
 
-         
-            if(result.exists()){
+
+            if (result.exists()) {
                 await updateDoc(doc(db, "userChats", currentUser.uid), {
                     [combindId + ".closed"]: false,
                 })
@@ -97,8 +97,8 @@ export default function Search() {
     }
     return (
         <div >
-            <div className="py-2 px-2 bg-grey-lightest" style={{backgroundColor : "#F5F5F5"}} >
-                <input 
+            <div className="py-2 px-2 bg-grey-lightest" style={{ backgroundColor: "#F5F5F5" }} >
+                <input
                     onKeyDown={handleKeyDown}
                     onChange={e => setUserName(e.target.value)}
                     value={userName}
@@ -108,11 +108,11 @@ export default function Search() {
             {user !== null && <div
                 onClick={handleSelect}
                 className="flex items-center justify-between px-2 py-2">
-                <Image
-                width={45} height={45}
-                referrerPolicy="no-referrer"
-                alt="search result image"
-                src={user.photoURL}  className="w-8 h-8 rounded-full" />
+                {user.photoURL && <Image
+                    width={45} height={45}
+                    referrerPolicy="no-referrer"
+                    alt="search result image"
+                    src={user.photoURL} className="w-8 h-8 rounded-full" />}
                 {user.displayName}
             </div>}
         </div>

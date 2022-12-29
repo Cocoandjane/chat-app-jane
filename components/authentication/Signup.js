@@ -22,13 +22,25 @@ export default function Signup() {
       return setError('Passwords do not match')
     }
 
+    if (passwordRef.current.value !== passwordConfirmRef.current.value) {
+      return setError("Passwords do not match")
+    }
+    if(passwordRef.current.value.length < 6) {
+      return setError("Password must be at least 6 characters")
+    }
     try {
-      setError('')
-      await signup(firstNameRef.current.value + " " + lastNameRef.current.value, emailRef.current.value, passwordRef.current.value)
+      await signup(firstNameRef.current.value + " " + lastNameRef.current.value, emailRef.current.value, passwordRef.current.value)    
       router.push('/')
-    } catch(err) {
-      console.log(err)
-      setError('Failed to create an account')
+    } catch (error) {
+      console.log(error.code)
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          setError(`Email address ${emailRef.current.value} already in use`);
+          return;
+        default:
+          setError("Please make sure your password is at least 6 characters long");
+          return;
+      }
     }
   }
 
