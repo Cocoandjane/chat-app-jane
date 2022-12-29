@@ -108,7 +108,11 @@ export default function Search() {
             {user !== null && <div
                 onClick={handleSelect}
                 className="flex items-center justify-between px-2 py-2">
-                <img src={user.photoURL} alt="" className="w-8 h-8 rounded-full" />
+                <Image
+                width={45} height={45}
+                referrerPolicy="no-referrer"
+                alt="search result image"
+                src={user.photoURL}  className="w-8 h-8 rounded-full" />
                 {user.displayName}
             </div>}
         </div>
