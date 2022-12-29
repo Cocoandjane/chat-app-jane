@@ -43,8 +43,7 @@ export default function Contacts() {
     }
 
     //delete room option right click
-    async function handleDeleteRoom() {
-       
+    async function handleDeleteRoom() {    
         //get data that is from current clicked user
         await updateDoc(doc(db, "userChats", currentUser.uid), {
             [contextMenuId + ".closed"]: true,
@@ -71,7 +70,7 @@ export default function Contacts() {
 
     return (
         <>
-            {Object.entries(contacts).sort((a, b) => b[1].date - a[1].date).filter(data => data[1].closed !== true).map((contact) => (
+            {contacts && Object.entries(contacts).sort((a, b) => b[1].date - a[1].date).filter(data => data[1].closed !== true).map((contact) => (
                 
                 <div  key={contact[0]}>
                     {/* // onContextMenu={(e) => { e.preventDefault(); handleDeleteRoom(contact) }}

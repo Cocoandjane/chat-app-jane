@@ -30,7 +30,7 @@ export default function Signup() {
     }
     try {
       await signup(firstNameRef.current.value + " " + lastNameRef.current.value, emailRef.current.value, passwordRef.current.value)    
-      router.push('/')
+     router.push("/")
     } catch (error) {
       console.log(error.code)
       switch (error.code) {
