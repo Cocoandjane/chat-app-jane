@@ -102,7 +102,7 @@ export default function Search() {
                     onKeyDown={handleKeyDown}
                     onChange={e => setUserName(e.target.value)}
                     value={userName}
-                    type="text" className="w-full px-2 py-2 text-sm !outline-none" placeholder="Search or start new chat" />
+                    type="text" className="w-full px-2 py-2 text-sm !outline-none border-transparent focus:border-transparent focus:ring-0" placeholder="Search or start new chat" />
             </div>
             {error && <div>user not found</div>}
             {user !== null && <div

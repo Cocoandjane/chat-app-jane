@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import { useChat } from '../../contexts/ChatContext'
-
+import Image from 'next/image'
 export default function RightHeader() {
     const router = useRouter()
     const {data, dispatch} = useChat()
@@ -15,9 +15,12 @@ export default function RightHeader() {
             <div className="py-2 px-3 bg-grey-lighter flex flex-row justify-between items-center">
                 <div className="flex items-center">
                     <div>
-                        <img 
+                        <Image
+                        width={45} 
+                        height={45}
                            referrerPolicy="no-referrer"
-                        className="w-10 h-10 rounded-full" src={data.user?.photoURL} />
+                           alt="my contact's profile image"
+                        className="rounded-full" src={data.user?.photoURL} />
                     </div>
                     <div className="ml-4">
                         <p className="text-grey-darkest">

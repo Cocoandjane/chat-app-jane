@@ -173,7 +173,7 @@ export default function Input({ sendMessage }) {
 
                 </div>
                 <div className=" flex flex-row w-full border rounded mx-2 ">
-                    <input ref={inputRef} onKeyUp={handleKeyUp} className="w-full h-full py-2 px-2 !outline-none" type="text" />
+                    <input ref={inputRef} onKeyUp={handleKeyUp} className="w-full h-full py-2 px-2 !outline-none border-transparent focus:border-transparent focus:ring-0" type="text" />
                     <input onChange={(e) => setImgInMsg(e.target.files[0])} className="w-full h-full py-2 px-2 hidden" type="file" id="file" multiple />
                     <label htmlFor='file' className="py-2 px-2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="24" height="24" strokeWidth="1.5" stroke="currentColor">

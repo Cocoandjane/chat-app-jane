@@ -3,7 +3,7 @@ import { onSnapshot, doc, updateDoc, deleteField, where, query, collection, Quer
 import { db } from '../../firebase'
 import { useAuth } from '../../contexts/AuthContext'
 import { useChat } from '../../contexts/ChatContext'
-
+import Image from 'next/image'
 import { Button, Dropdown, Space } from 'antd';
 
 export default function Contacts() {
@@ -89,7 +89,10 @@ export default function Contacts() {
                         onClick={() => handleSelect(contact[1].userInfo)}
                         className=" bg-white px-3 flex items-center hover:bg-grey-lighter cursor-pointer ">
                             <div>
-                                <img className="h-12 w-[48px] rounded-full "
+                                <Image
+                                width={48} height={48}
+                                alt={contact[1].userInfo.displayName}
+                                className="rounded-full "
 
                                     referrerPolicy="no-referrer"
                                     src={contact[1].userInfo.photoURL} />
