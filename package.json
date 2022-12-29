@@ -5,16 +5,33 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "start": "NODE_ENV=production node server.js"
   },
   "dependencies": {
-    "next": "13.0.5",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "antd": "^5.1.1",
+    "axios": "^1.2.0",
+    "body-parser": "^1.20.1",
+    "bootstrap": "^5.2.3",
+    "cors": "^2.8.5",
+    "emoji-picker-react": "3.5.1",
+    "firebase": "^9.14.0",
+    "flowbite-react": "^0.3.7",
+    "next": "^13.0.5",
+    "pusher": "^5.1.1-beta",
+    "pusher-js": "^7.5.0",
+    "react": "^18.2.0",
+    "react-bootstrap": "^2.6.0",
+    "react-dom": "^18.2.0",
+    "sentiment": "^5.0.2",
+    "tailwind": "^4.0.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.13",
     "eslint": "8.28.0",
-    "eslint-config-next": "13.0.5"
+    "eslint-config-next": "13.0.5",
+    "flowbite": "^1.5.5",
+    "postcss": "^8.4.20",
+    "tailwindcss": "^3.2.4"
   }
 }
