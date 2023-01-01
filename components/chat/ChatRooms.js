@@ -1,4 +1,4 @@
-import React, { useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { useChat } from '../../contexts/ChatContext'
 import Header from './Header'
@@ -9,16 +9,27 @@ import Message from './Message'
 import MessageByMe from './MessageByMe'
 import RightHeader from './RightHeader'
 import Pusher from 'pusher-js'
-import { onSnapshot, doc } from 'firebase/firestore'
+import { onSnapshot, doc, updateDoc } from 'firebase/firestore'
 import { db } from '../../firebase'
 import axios from 'axios'
+import { useRouter } from 'next/router'
+import { Button, Dropdown} from 'antd';
 
 export default function ChatRooms() {
 
+    const router = useRouter()
     const { data } = useChat()
     const { currentUser } = useAuth()
     const [user, setUser] = useState([])
     const [messages, setMessages] = useState([])
+    const [messageOnEdit, setmessageOnEdit] = useState()
+    const [isEdit, setIsEdit] = useState(false)
+    const [id, setId] = useState("")
+
+
+    if (currentUser === null) {
+        router.push("/auth/login")
+    }
 
     useEffect(() => {
         if (data.chatId) {
@@ -60,6 +71,7 @@ export default function ChatRooms() {
     //     }
     // }, [])
 
+    //this function is for pusher , but not using pusher now
     function sendMessage(message) {
         const chat = {
             id: self.crypto.randomUUID(),
@@ -73,6 +85,47 @@ export default function ChatRooms() {
 
     }
 
+    function editFunc() {
+        setIsEdit(true)
+    }
+
+    function handleDeleteMessage() {
+
+      const newMsg = messages.filter(msg => msg.id !== id)
+      updateDoc(doc(db, "chats", data.chatId), {
+        "messages": newMsg
+      })
+    }
+
+    const items = [
+        {
+            key: '1',
+            label: (
+                <Button type='ghost' onClick={editFunc}>  Edit message </Button>
+            ),
+            disabled: true
+        },
+        {
+            key: '2',
+            label: (
+                <Button type='ghost' onClick={handleDeleteMessage}> Delete message</Button>
+            ),
+        },
+        {
+            type: 'divider',
+          },
+        {
+            key: '3',
+            disabled:true,
+            label: (
+                <Button type='ghost'> Quote</Button>
+            ),
+        },
+
+    ];
+
+
+   
     return (
         <div>
             {/* 449388 */}
@@ -94,12 +147,27 @@ export default function ChatRooms() {
                                 {messages !== undefined && messages.length > 0 && messages.map((message, index) => (
                                     //check if the message is from you or not
                                     message.sender === currentUser?.uid ? (
-                                        <MessageByMe key={index} message={message} />
+                                        
+                                        <Dropdown
+                                            key={index}
+                                           
+                                            menu={
+                                                {
+                                                    items,
+                                               // onClick,
+                                            }}
+                                           
+                                            trigger={["contextMenu"]}
+                                            onContextMenu={() => { setmessageOnEdit(message), setId(message.id) }}
+                                        >
+                                            <div >
+                                                <MessageByMe message={message} /></div>
+                                        </Dropdown>
                                     ) : (
                                         <Message key={index} message={message} />)
                                 ))}
                             </div>
-                            <Input sendMessage={sendMessage} />
+                            <Input sendMessage={sendMessage} isEdit={isEdit} editMessage={messageOnEdit} setmessageOnEdit={setmessageOnEdit} setEdit={setIsEdit} allMessages={messages} />
                         </div>
                     </div>
                 </div>

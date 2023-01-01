@@ -1,16 +1,25 @@
 import React, { useRef, useEffect } from 'react'
 import Image from 'next/image'
+import { Button, Dropdown, Space } from 'antd';
 
 
-export default function MessageByMe({ message }) {
+export default function MessageByMe({ message ,rightClickMessage}) {
     const msgContainerRef = useRef()
     useEffect(() => {
-
         msgContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
     }, [])
-    return (
+    function editMessage(){
+        console.log("edit",message)
+    }
+    // function rightClickMessage(){
+    //     console.log("right ")
+    // }
 
-        <div ref={msgContainerRef} className="flex justify-end mb-2">
+    return (
+       
+        <div 
+        onContextMenu={rightClickMessage}
+        ref={msgContainerRef} className="flex justify-end mb-2">
             <div className="rounded py-2 px-3" style={{ backgroundColor: "#E2F7CB" }}>
                 {message.image && <Image src={message.image} alt="image" width="0"
                     height="0"
@@ -27,6 +36,7 @@ export default function MessageByMe({ message }) {
                 </p>
             </div>
         </div>
+       
 
     )
 }

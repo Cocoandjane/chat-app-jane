@@ -27,6 +27,7 @@ export function ChatProvider({ children }) {
         }
     }
 
+
     const [state, dispatch] = useReducer(chatReducer, INITIAL_STATE)
 
     return (

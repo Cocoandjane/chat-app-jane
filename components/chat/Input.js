@@ -5,10 +5,12 @@ import dynamic from 'next/dynamic'
 import { storage, db } from '../../firebase'
 import { useChat } from '../../contexts/ChatContext'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import { doc, updateDoc, arrayUnion } from 'firebase/firestore'
+import { doc, setDoc, updateDoc, get, arrayUnion, onSnapshot } from 'firebase/firestore'
 import { v4 } from 'uuid'
 import { URLPattern } from 'next/server'
 import Image from 'next/image'
+import { message } from 'antd'
+import { CONSTANTS } from '@firebase/util'
 // import { listAll } from 'firebase/storage'
 
 const Picker = dynamic(
@@ -20,76 +22,45 @@ const Picker = dynamic(
 );
 
 
-export default function Input({ sendMessage }) {
+export default function Input({ allMessages, sendMessage, editMessage, isEdit, setEdit}) {
     const [emojisOpen, setEmojisOpen] = useState(false)
     const emojiRef = useRef()
     const { currentUser } = useAuth()
     const inputRef = useRef()
     const [imgInMsg, setImgInMsg] = useState(null)
     const { data, dispatch } = useChat()
-
-
-    // useEffect(() => {
-    //     let uu = []
-    //     if (msgImages.length > 0) {
-    //         for (let i = 0; i < msgImages.length; i++) {
-    //             uu.push(URL.createObjectURL(msgImages[i]))
-
-    //         }
-    //     }
-    //     // console.log(uu)
-    //     setUrls(uu)
-    // }, [msgImages])
-
-
-
-    // async function makeUrls(files) {
-    //     for (let i = 0; i < files.length; i++) {
-    //         // console.log(urls[i])
-    //         const storageRef = ref(storage, `images/${currentUser.uid}/${files[i].name + v4()}`);
-    //         const uploadTask = 
-    //         await uploadBytes(storageRef, files[i]).then((snapshot) => {
-    //             getDownloadURL(snapshot.ref).then((downloadURLs) => {
-    //                 return setUrls(prevState => [...prevState, downloadURLs])
-    //             })
-    //         })
-    //     }
-
-    // }
-
-    // async function handleKeyUp(e) {
-    //     e.preventDefault()
-    //     if (e.keyCode === 13) {
-    //         if (!data.chatId) return
-    //         if (msgImages.length > 0) {
-    //             await makeUrls(msgImages)
-    //         }
-    //     }
-    // }
-
-    // function handleKeyUp(e) {
-
-    //     if (e.keyCode === 13) {
-    //         e.preventDefault()
-    //         sendMessage(inputRef.current.value)
-    //         inputRef.current.value = ''
-    //     }
-    // }
-
+    //edit still has a bug, need to refresh after first edit
     async function handleKeyUp(e) {
         e.preventDefault()
         if (e.keyCode === 13) {
+            if (isEdit) {
+                let updatedMessages = [];
+                allMessages.map(msg => {
+                    if(msg.id === editMessage.id){
+                        updatedMessages.push({ ...msg, message: inputRef.current.value })
+                    } else {
+                        updatedMessages.push({ ...msg })
+                    }
+                    const docRef = doc(db, "chats", data.chatId)
+                    updateDoc(docRef,{
+                        "messages": updatedMessages
+                    })
+                
+                })
+                setEdit(false)
+                inputRef.current.value = ''
+                return
+            }
             if (!data.chatId) return
             if (imgInMsg) {
                 const storageRef = ref(storage, `images/${currentUser.uid}/${imgInMsg.name + v4()}`);
                 await uploadBytes(storageRef, imgInMsg).then((snapshot) => {
                     getDownloadURL(snapshot.ref).then((url) => {
-                        console.log(URLPattern)
                         updateDoc(doc(db, "chats", data.chatId), {
                             messages: arrayUnion({
                                 id: self.crypto.randomUUID(),
                                 message: inputRef.current.value,
-                                image:url,
+                                image: url,
                                 sender: currentUser.uid,
                                 timestamp: Date.now()
                             })
@@ -108,20 +79,19 @@ export default function Input({ sendMessage }) {
                 })
             }
 
-            await updateDoc(doc(db, "userChats", currentUser.uid),{
-                [data.chatId + ".lastMessage"] : inputRef.current.value,
-                [data.chatId + ".date"]:Date.now()
-            } )
-            await updateDoc(doc(db, "userChats", data.user.uid),{
-                [data.chatId + ".lastMessage"] : inputRef.current.value,
-                [data.chatId + ".date"]:Date.now()
-            } )
+            await updateDoc(doc(db, "userChats", currentUser.uid), {
+                [data.chatId + ".lastMessage"]: inputRef.current.value,
+                [data.chatId + ".date"]: Date.now()
+            })
+            await updateDoc(doc(db, "userChats", data.user.uid), {
+                [data.chatId + ".lastMessage"]: inputRef.current.value,
+                [data.chatId + ".date"]: Date.now()
+            })
+
             inputRef.current.value = ''
             setImgInMsg(null)
         }
     }
-
-
 
 
     function clickEmogi(e) {
@@ -150,6 +120,7 @@ export default function Input({ sendMessage }) {
 
     if (!data.chatId) return null
 
+
     return (
         <div>
             <div ref={emojiRef}>
@@ -159,12 +130,12 @@ export default function Input({ sendMessage }) {
             </div>
             <div >
                 {imgInMsg && <Image
-                alt="a image you just picked"
-                width={200}
-                height={300}
-                style={{width:"200px", height:"auto"}}
-                src={URL.createObjectURL(imgInMsg)}/>}
-                </div>
+                    alt="a image you just picked"
+                    width={200}
+                    height={300}
+                    style={{ width: "200px", height: "auto" }}
+                    src={URL.createObjectURL(imgInMsg)} />}
+            </div>
             <div className="bg-grey-lighter px-4 py-4 flex items-center">
                 <div>
                     <svg onClick={clickEmogi} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path opacity=".45" fill="#263238" d="M9.153 11.603c.795 0 1.439-.879 1.439-1.962s-.644-1.962-1.439-1.962-1.439.879-1.439 1.962.644 1.962 1.439 1.962zm-3.204 1.362c-.026-.307-.131 5.218 6.063 5.551 6.066-.25 6.066-5.551 6.066-5.551-6.078 1.416-12.129 0-12.129 0zm11.363 1.108s-.669 1.959-5.051 1.959c-3.505 0-5.388-1.164-5.607-1.959 0 0 5.912 1.055 10.658 0zM11.804 1.011C5.609 1.011.978 6.033.978 12.228s4.826 10.761 11.021 10.761S23.02 18.423 23.02 12.228c.001-6.195-5.021-11.217-11.216-11.217zM12 21.354c-5.273 0-9.381-3.886-9.381-9.159s3.942-9.548 9.215-9.548 9.548 4.275 9.548 9.548c-.001 5.272-4.109 9.159-9.382 9.159zm3.108-9.751c.795 0 1.439-.879 1.439-1.962s-.644-1.962-1.439-1.962-1.439.879-1.439 1.962.644 1.962 1.439 1.962z"></path></svg>
@@ -173,7 +144,9 @@ export default function Input({ sendMessage }) {
 
                 </div>
                 <div className=" flex flex-row w-full border rounded mx-2 ">
-                    <input ref={inputRef} onKeyUp={handleKeyUp} className="w-full h-full py-2 px-2 !outline-none border-transparent focus:border-transparent focus:ring-0" type="text" />
+                    <input ref={inputRef} onKeyUp={handleKeyUp}
+                        defaultValue={isEdit==true ? editMessage.message : ""}
+                        className="w-full h-full py-2 px-2 !outline-none border-transparent focus:border-transparent focus:ring-0" type="text" />
                     <input onChange={(e) => setImgInMsg(e.target.files[0])} className="w-full h-full py-2 px-2 hidden" type="file" id="file" multiple />
                     <label htmlFor='file' className="py-2 px-2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" width="24" height="24" strokeWidth="1.5" stroke="currentColor">
