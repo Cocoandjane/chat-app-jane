@@ -85,10 +85,6 @@ export default function ChatRooms() {
 
     }
 
-    function editFunc() {
-        setIsEdit(true)
-    }
-
     function handleDeleteMessage() {
 
       const newMsg = messages.filter(msg => msg.id !== id)
@@ -101,7 +97,7 @@ export default function ChatRooms() {
         {
             key: '1',
             label: (
-                <Button type='ghost' onClick={editFunc}>  Edit message </Button>
+                <Button type='ghost' onClick={()=>{setIsEdit(true)}}>  Edit message </Button>
             ),
             disabled: true
         },
@@ -149,16 +145,14 @@ export default function ChatRooms() {
                                     message.sender === currentUser?.uid ? (
                                         
                                         <Dropdown
-                                            key={index}
-                                           
+                                            key={index}                                          
                                             menu={
                                                 {
                                                     items,
-                                               // onClick,
-                                            }}
-                                           
+                                               onClick : (()=>{setmessageOnEdit(message)}),
+                                            }}   
                                             trigger={["contextMenu"]}
-                                            onContextMenu={() => { setmessageOnEdit(message), setId(message.id) }}
+                                            onContextMenu={() => {setmessageOnEdit(message),setIsEdit(false), setId(message.id) }}
                                         >
                                             <div >
                                                 <MessageByMe message={message} /></div>
